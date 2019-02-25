@@ -1,18 +1,104 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <meta charset="utf-8">
-    <title>Tw333t</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  </head>
-  <body>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Developer Review</title>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+        <link rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous">
+    </head>
+    <body>
+        <div id="app">
+            {%raw%}
+            <section id="cover">
+                <div id="cover-caption">
+                    <div id="container" class="container">
+                        <div class="row">
+                            <div class="col-sm-12 offset-sm-1 text-center">
+                                <h3 class="display-3">Welcome search twitter
+                                    handles</h3>
+                                <div class="info-form text-center row">
+                                    <div class="form-group col-6">
+                                        <input type="text"
+                                            class="form-control"
+                                            placeholder="What are you looking for?" v-model="query">
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn
+                                            btn-success" @click="fetchData()">okay,go!</button>
+                                    </div>
+                                </div>
+                            </div>
 
-  <!-- 
-
-    Build a Vue component that gets 3 latest tweets with a user inputted Twitter handle through the "Get tweets" -route.
-
-  -->
-
-  </body>
+                            <div class="container" v-for="item in band" v-if="loading">
+                                <div class="card flex-row flex-wrap">
+                                    <div class="card-header border-0">
+                                        <img :src="item.user.profile_image_url"
+                                            />
+                                    </div>
+                                    <div class="card-block px-2">
+                                        <h4 class="card-title">{{item.user.name}}</h4>
+                                        <p class="card-text">@{{item.user.screen_name}}</p>
+                                        <p>{{item.text}}</p>
+                                    </div>
+                                    <div class="w-100"></div>
+                                    <div class="card-footer w-100 text-muted">
+                                        Vue is awesome - Phi Nguyen
+                                    </div>
+                                </div>
+                            </br>
+                        </div>
+                        <div v-else>
+                            Please input 😢
+                        </div>
+                    </div>
+                </div>
+            </section>
+            {%endraw%}
+        </div>
+        <script>
+           var vm = new Vue({
+               el:'#app',
+               data:{
+                   band:[],
+                   query:'',
+                   loading: false,
+               },
+               methods:{
+                   fetchData:function(){
+                       if(this.query==""){ 
+                        this.loading=false;
+                        return
+                       }else{
+                        this.loading=true;
+                        this.$http.get('/api/v1.0/gettweets?search='+this.query).then(response => {
+                         this.band=response.body;
+                        this.query = '';
+                     
+                    }, response => {
+                    console.log('error')
+                   });    
+                     }
+                   
+                   }
+               }
+           })
+        </script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    </body>
 </html>

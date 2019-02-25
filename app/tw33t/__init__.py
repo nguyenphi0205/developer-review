@@ -8,4 +8,4 @@ application = app
 # Setup the app with the config.py file
 app.config.from_object('config')
 
-from tw33t.views import main
+from tw33t import main
